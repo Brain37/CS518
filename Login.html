@@ -1,0 +1,71 @@
+<html ng-app="myApp">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/1.0.0/angularfire.min.js"></script>
+</head>
+
+<body ng-controller="MyController">
+    <div class="assignment5">
+        <header>Movie collection</header>
+        <label for "Email:"> Email:</label>
+        <input ng-model="email" type="text" id="email" placeholder="email">
+        <br/>
+        <label for "Password:"> Password:</label>
+        <input ng-model="password" type="password" id="password" placeholder="password">
+        <br/>
+        <button ng-click="login()">Login</button>
+        <br/>
+        <button ng-click="Register()">Register</button>
+    </div>
+</body>
+
+
+<script>
+    // define our app and dependencies (remember to include firebase!)
+    var app = angular.module("myApp", ["firebase"]);
+
+    // inject $firebaseAuth into our controller
+    app.controller("MyController", ["$scope", "$firebaseArray",
+        function($scope, $firebaseArray) {
+            var ref = new Firebase("https://blazing-heat-8324.firebaseio.com/");
+
+            //register a new user
+            $scope.Register = function() {
+                ref.createUser({
+                    email: $scope.email,
+                    password: $scope.password
+                }, function(error, userData) {
+                    if (error) {
+                        console.log("Error creating user:", error);
+                    } else {
+                        console.log("Successfully created user account with uid:", userData.uid);
+                    }
+                });
+            }
+
+
+            //login an existing user
+            $scope.login = function() {
+                ref.authWithPassword({
+                    email: $scope.email,
+                    //get access to the text box
+                    password: $scope.password
+                        //get access to text box password
+                }, function(error, authData) {
+                    if (error) {
+                        console.log("Login Failed!", error);
+                    } else {
+                        console.log("Authenticated successfully with payload:", authData);
+                        window.location = "file:///C:/Users/Brian%20Scott/firebaseTest/Homework%205/dvdCollection.html";
+                    }
+                });
+            }
+        }
+    ]);
+
+</script>
+
+
+<html>
